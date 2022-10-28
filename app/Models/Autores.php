@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Noticias extends Model
+class Autores extends Model
 {
     use HasFactory;
-    public function autor() {
-        return $this->belongsTo(Autores::class,'nome','id');
+    public function noticia() {
+        return $this->belongsTo(Noticias::class,'autor','id');
     }
 }
