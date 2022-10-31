@@ -9,6 +9,6 @@ class Autores extends Model
 {
     use HasFactory;
     public function noticia() {
-        return $this->belongsTo(Noticias::class,'autor','id');
+        return $this->belongsTo(Noticias::class,'idAutor','id');
     }
 }

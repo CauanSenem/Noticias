@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idAutor')->unsigned();
             $table->foreign('idAutor')->references('id')->on('autores');
             $table->string('portal');
-            $table->dateTime('data');
+            $table->dateTime('dataHora');
             $table->string('obs');
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('noticias');
+        //
     }
 };

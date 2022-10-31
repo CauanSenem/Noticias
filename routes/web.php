@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AutoresController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\NoticiasController;
@@ -19,6 +20,9 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('noticias/buscar',[NoticiasController::class,'buscar']);
 Route::resource('noticias',NoticiasController::class);
+
+Route::get('autores/buscar',[AutoresController::class,'buscar']);
+Route::resource('autores',AutoresController::class);
 
 Auth::routes();
 

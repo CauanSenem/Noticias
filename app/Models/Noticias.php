@@ -9,6 +9,6 @@ class Noticias extends Model
 {
     use HasFactory;
     public function autor() {
-        return $this->belongsTo(Autores::class,'nome','id');
+        return $this->belongsTo(Autores::class,'idAutor','id');
     }
 }

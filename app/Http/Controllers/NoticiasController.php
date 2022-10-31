@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Noticias;
+use App\Models\Autores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
@@ -26,7 +27,7 @@ class NoticiasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function buscar(Request $request) {
-        $noticias = Noticias::where('titulo','LIKE','%'.$request->input('busca').'%')->orwhere('autor','LIKE','%'.$request->input('busca').'%')->paginate(5);
+        $noticias = Noticias::where('titulo','LIKE','%'.$request->input('busca').'%')->orwhere('idAutor','LIKE','%'.$request->input('busca').'%')->paginate(5);
         return view('noticias.index',array('noticias' => $noticias,'busca'=>$request->input('busca')));
     }
 
@@ -39,7 +40,8 @@ class NoticiasController extends Controller
     public function create()
     {
         if ((Auth::check()) && (Auth::user()->isAdmin())) {
-            return view('contato.create');
+            $autores = Autores::all();
+            return view('noticias.create',['autores'=>$autores]);
         }
         else {
             return redirect('login');
@@ -58,14 +60,14 @@ class NoticiasController extends Controller
         if ((Auth::check()) && (Auth::user()->isAdmin())) {
             $this->validate($request,[
                 'titulo' => 'required',
-                'autor' => 'required',
+                'idAutor' => 'required',
                 'portal' => 'required',
                 'dataHora' => 'required',
                 'obs' => 'required',
             ]);
             $noticia = new Noticias();
             $noticia->titulo = $request->input('titulo');
-            $noticia->autor = $request->input('autor');
+            $noticia->idAutor = $request->input('idAutor');
             $noticia->portal = $request->input('portal');
             $noticia->dataHora = \Carbon\Carbon::createFromFormat('d/m/Y H:i:s', $request->input('dataHora'));
             $noticia->obs = $request->input('obs');
@@ -74,9 +76,9 @@ class NoticiasController extends Controller
                     $imagem = $request->file('foto');
                     $nomearquivo = md5($noticia->id).".".$imagem->getClientOriginalExtension();
                     //dd($imagem, $nomearquivo,$contato->id);
-                    $request->file('foto')->move(public_path('.\img\contatos'),$nomearquivo);
+                    $request->file('foto')->move(public_path('.\img\noticias'),$nomearquivo);
                 }
-                return redirect('contatos');
+                return redirect('noticias');
             }
         } else {
             return redirect('login');
@@ -91,8 +93,8 @@ class NoticiasController extends Controller
      */
     public function show($id)
     {
-        $contato = Noticias::find($id);
-        return view('contato.show',array('contato' => $contato));
+        $noticia = Noticias::find($id);
+        return view('noticias.show',array('noticia' => $noticia));
     }
 
     /**
@@ -104,8 +106,9 @@ class NoticiasController extends Controller
     public function edit($id)
     {
         if ((Auth::check()) && (Auth::user()->isAdmin())) {
-            $contato = Noticias::find($id);
-            return view('contato.edit',array('contato' => $contato));
+            $noticia = Noticias::find($id);
+            $autores = Autores::all();
+            return view('noticias.edit',array('noticia' => $noticia,'autores'=>$autores));
         } else {
             return redirect('login');
         }
@@ -122,25 +125,25 @@ class NoticiasController extends Controller
     {
         if ((Auth::check()) && (Auth::user()->isAdmin())) {
             $this->validate($request,[
-                'nome' => 'required|min:3',
-                'email' => 'required|e-mail|min:3',
-                'telefone' => 'required',
-                'cidade' => 'required',
-                'estado' => 'required',
+                'titulo' => 'required',
+                'idAutor' => 'required',
+                'portal' => 'required',
+                'dataHora' => 'required',
+                'obs' => 'required',
             ]);
-            $contato = Noticias::find($id);
+            $noticia = Noticias::find($id);
             if($request->hasFile('foto')){
                 $imagem = $request->file('foto');
-                $nomearquivo = md5($contato->id).".".$imagem->getClientOriginalExtension();
-                $request->file('foto')->move(public_path('.\img\contatos'),$nomearquivo);
+                $nomearquivo = md5($noticia->id).".".$imagem->getClientOriginalExtension();
+                $request->file('foto')->move(public_path('.\img\noticias'),$nomearquivo);
             }
-            $contato->nome = $request->input('nome');
-            $contato->email = $request->input('email');
-            $contato->telefone = $request->input('telefone');
-            $contato->cidade = $request->input('cidade');
-            $contato->estado = $request->input('estado');
-            if($contato->save()) {
-                Session::flash('mensagem','Contato alterado com sucesso');
+            $noticia->titulo = $request->input('titulo');
+            $noticia->idAutor = $request->input('idAutor');
+            $noticia->portal = $request->input('portal');
+            $noticia->dataHora = \Carbon\Carbon::createFromFormat('d/m/Y H:i:s', $request->input('dataHora'));
+            $noticia->obs = $request->input('obs');
+            if($noticia->save()) {
+                Session::flash('mensagem','Noticia alterado com sucesso');
                 return redirect()->back();
             }
         } else {
@@ -158,13 +161,13 @@ class NoticiasController extends Controller
     public function destroy(Request $request, $id)
     {
         if ((Auth::check()) && (Auth::user()->isAdmin())) {
-            $contato = Noticias::find($id);
+            $noticia = Noticias::find($id);
             if (isset($request->foto)) {
             unlink($request->foto);
             }
-            $contato->delete();
-            Session::flash('mensagem','Contato Excluído com Sucesso Foto:');
-            return redirect(url('contatos/'));
+            $noticia->delete();
+            Session::flash('mensagem','Notícia Excluído com Sucesso Foto:');
+            return redirect(url('noticias/'));
         } else {
             return redirect('login');
         }

@@ -33,12 +33,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('noticias') }}">Últimas Notícias</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('autores') }}">Autores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('emprestimos') }}">Empréstimos</a>
-                        </li>
+                        @if ((Auth::check()) && (Auth::user()->isAdmin()))                      
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('autores') }}">Autores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('emprestimos') }}">Empréstimos</a>
+                            </li>
+                        @endif 
                     </ul>
 
                     <!-- Right Side Of Navbar -->

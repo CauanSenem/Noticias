@@ -1,23 +1,23 @@
 @extends('layouts.app')
-@section('title','Listagem de Contatos')
+@section('title','Listagem de Autores')
 @section('content')
-    <h1>Últimas Notícias</h1>
+    <h1>Listagem de Autores</h1>
     @if(Session::has('mensagem'))
         <div class="alert alert-info">
             {{Session::get('mensagem')}}
         </div>
     @endif
-    {{Form::open(['url'=>'noticias/buscar','method'=>'GET'])}}
+    {{Form::open(['url'=>'autores/buscar','method'=>'GET'])}}
         <div class="row">
             @if ((Auth::check()) && (Auth::user()->isAdmin()))
                 <div class="col-sm-3">
-                    <a class="btn btn-success" href="{{url('noticias/create')}}">Adicionar</a>
+                    <a class="btn btn-success" href="{{url('autores/create')}}">Adicionar</a>
                 </div>
             @endif
             <div class="col-sm-9">
                 <div class="input-group ml-5">
                     @if($busca !== null)
-                        &nbsp;<a class="btn btn-info" href="{{url('noticias/')}}">Todos</a>&nbsp;
+                        &nbsp;<a class="btn btn-info" href="{{url('autores/')}}">Todos</a>&nbsp;
                     @endif
                     {{Form::text('busca',$busca,['class'=>'form-control','required','placeholder'=>'buscar'])}}
                     &nbsp;
@@ -30,13 +30,13 @@
     {{Form::close()}}
     <br />
     <table class="table table-striped">
-        @foreach ($noticias as $noticia)
+        @foreach ($autores as $autor)
             <tr>
                 <td>
-                    <a href="{{url('noticias/'.$noticia->id)}}">{{$noticia->titulo}}</a>
+                    <a href="{{url('autores/'.$autor->id)}}">{{$autor->nome}}</a>
                 </td>
             </tr>
         @endforeach
     </table>
-    {{ $noticias->links() }}
+    {{ $autores->links() }}
 @endsection
