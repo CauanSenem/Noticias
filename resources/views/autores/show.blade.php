@@ -19,9 +19,9 @@
             }
             //echo $nomeimagem;
         @endphp
-
-        {{Html::image(asset($nomeimagem),'Foto de '.$autor->nome,["class"=>"img-thumbnail"])}}
-
+        <div style="width: 250px;">
+            {{Html::image(asset($nomeimagem),'Foto de '.$autor->nome,["class"=>"img-thumbnail"])}}
+        </div>
         <div class="card-header">
             <h1>Autor - {{$autor->nome}}</h1>
         </div>
